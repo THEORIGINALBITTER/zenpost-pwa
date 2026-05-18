@@ -1,0 +1,28 @@
+{
+  "name": "zenpost-pwa",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@editorjs/delimiter": "^1.4.2",
+    "@editorjs/editorjs": "^2.31.6",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/list": "^2.0.9",
+    "@editorjs/quote": "^2.7.6",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^3.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "vite": "^7.1.10"
+  }
+}
