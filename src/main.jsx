@@ -42,7 +42,7 @@ function HomeScreen({ onOpenWriter, onOpenZenNote, onOpenZenImage, onOpenSetting
           </button>
         </section>
 
-        <section className="mt-7">
+        <section className="mt-[10%]">
           
           <div className="mt-3.5 grid grid-cols-2 gap-[10px]">
             <QuickCard
@@ -75,7 +75,7 @@ function HomeScreen({ onOpenWriter, onOpenZenNote, onOpenZenImage, onOpenSetting
               icon={<><path d="M8 8c0-1.7 1.3-3 3-3h2a3 3 0 1 1 0 6h-2a3 3 0 1 0 0 6h2a3 3 0 1 0 0-6" /><path d="M7 12h10" /></>}
             />
             <QuickCard
-              title="Planen"
+              title="ZenPlaner"
               desc="Kalender, Planung,<br />Veröffentlichung"
               onClick={onOpenPlanner}
               isDark={isDark}
@@ -120,6 +120,36 @@ function App() {
   const [footerAction, setFooterAction] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(() => loadLocalProfile().avatarUrl);
   const [themeMode, setThemeModeState] = useState(() => getThemeMode() || DEFAULT_THEME_MODE);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const desktopRedirectUrl = 'https://zenpost.denisbitter.de';
+    const mobileOverride = new URLSearchParams(window.location.search).get('mobile') === '1';
+    const isIpad = () =>
+      /iPad/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isMobileLikeDevice = () => {
+      const ua = navigator.userAgent || '';
+      const mobileUa = /Android|iPhone|iPod|Windows Phone|webOS|Mobile/i.test(ua);
+      const touchPoints = navigator.maxTouchPoints || 0;
+      const viewportWidth = Math.min(
+        window.innerWidth || Number.MAX_SAFE_INTEGER,
+        window.screen?.width || Number.MAX_SAFE_INTEGER
+      );
+      const touchViewportMatch = touchPoints > 1 && viewportWidth <= 1280;
+      return mobileUa || touchViewportMatch;
+    };
+
+    const shouldStayOnPwa = isIpad() || isMobileLikeDevice();
+    if (!shouldStayOnPwa && !mobileOverride) {
+      const currentHost = window.location.hostname;
+      const targetHost = new URL(desktopRedirectUrl).hostname;
+      if (currentHost !== targetHost) {
+        window.location.replace(desktopRedirectUrl);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -396,15 +426,17 @@ function App() {
           </section>
         </div>
       )}
-      <AppFooter
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onPlus={handlePlus}
-        plusLabel={resolvedFooterAction.plusLabel}
-        plusSymbol={resolvedFooterAction.plusSymbol}
-        items={footerAction?.items}
-        onAction={handleFooterAction}
-      />
+      {screen !== 'home' ? (
+        <AppFooter
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          onPlus={handlePlus}
+          plusLabel={resolvedFooterAction.plusLabel}
+          plusSymbol={resolvedFooterAction.plusSymbol}
+          items={footerAction?.items}
+          onAction={handleFooterAction}
+        />
+      ) : null}
     </>
   );
 }
